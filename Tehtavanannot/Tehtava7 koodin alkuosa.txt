@@ -1,0 +1,99 @@
+GlowScript 2.9 VPython
+#TAYDENNA KOODI KAYTTAEN ESIMERKKINA MOODLESSA OLEVAA TYKKISOVELLUSTA
+
+scene.width=900
+scene.height=500
+scene.range=75
+scene.center=vec(0,20,0)
+scene.forward=vec(1,0,0)
+scene.title='KATAPULTTI'
+
+kulma=radians(45)
+kulma2=radians(0)
+P0=20              # jouawn lepopituus
+
+P=20                  # muuttuja jousen pituudelle kun se on jannitetty
+L=60                  # oylvaiden korkeus
+M=40                  # pylvaan massa
+k=30                  #jousivakio
+m=6.0                 #kuulan massa
+
+e=0.6                 #kuulan ja palkin tormayksen elastisuus
+
+maa=box(pos=vec(0,-1,0),size=vec(150,2,140),color=vec(0,0.5,0))
+alusta=cylinder(pos=vec(-70,0,0),axis=vec(0,0.6,0),radius=10,color=vec(0.2,0.2,0.2))
+jousi=helix(pos=vec(-70,2,0),axis=vec(P*cos(kulma)*cos(kulma2),P*sin(kulma),P*cos(kulma)*sin(kulma2)),coils=3,thickness=2,radius=4,color=vec(0.5,0.5,0.5))
+putki=cylinder(pos=alusta.pos,axis=1.3*jousi.axis,radius=6,opacity=0.25,color=vec(0.5,0.5,0.5))
+kuula=sphere(pos=jousi.pos+jousi.axis+5*hat(jousi.axis),radius=5,color=vec(1,1,1))
+palkki1=cylinder(pos=vec(30,0,-40),radius=5, axis=vec(0,L,0), color=vec(0.5,0.25,0.08))
+palkki2=cylinder(pos=vec(30,0,40),radius=5, axis=vec(0,L,0), color=vec(0,0.25,0.5))
+
+#rengas=ring(pos=jousi.pos+jousi.axis,size=vec(0.5,12,12),axis=jousi.axis, color=vec(1,1,1))
+taulu=label(pos=vec(-50,-40,0),text='Virita jousi liukusaatimella ja klikkaa shoot',box=False)
+
+
+kuula.velocity=vec(0,0,0)
+g=9.8
+a=vec(0,-g,0)
+
+wt = wtext(text=' Jousen viritys 0- 100%')
+
+def lataa(s):
+    global P     
+    P=P0*s.value
+    wt.text = ' Jousen viritys {:3.1f}'.format(s.value*100)+' %'
+
+s=slider(min=0,max=1,value=1,length=150,bind=lataa,left=25,right=25,top=15)
+
+wt2 = wtext(text=' Suunta 0.0 deg')
+
+def suuntaa(s2):
+    global kulma2     
+    kulma2=radians(s2.value)
+    wt2.text = ' Suunta {:3.1f}'.format(s2.value)+' deg'
+
+s2=slider(min=-30,max=30,value=0,length=150,bind=suuntaa,left=25,right=25,top=15)
+
+
+def shoot(b2):
+    global tila
+    tila=2
+    
+b2=button(text='shoot ',bind=shoot,color=color.red)
+
+angle = radians(90)
+alpha=0
+omega=0
+
+dt=0.01
+
+tila=1
+
+while tila!=5:
+    rate(200)
+    # TILASSA 1 KATAPULTIN JOUSI PURISTETAAN KOKOON LAUKAISUA VARTEN          
+    if tila==1 :
+        jousi.axis=vec(P*cos(kulma)*cos(kulma2),P*sin(kulma),P*cos(kulma)*sin(kulma2))
+        putki.axis=P0*hat(jousi.axis)
+        kuula.pos=jousi.pos+jousi.axis+kuula.radius*hat(jousi.axis)
+        
+    # TILAAN 2 TULLAAN LAUKAISUPAINIKETTA PAINAMALLA
+    # TASSA TILASSA JOUSI ANTAA LAHTONOPEUDEN KUULALLE
+    if tila==2:
+        acc=k*(P0-P)/m*hat(jousi.axis)
+        kuula.pos+=kuula.velocity*dt+0.5*acc*dt**2
+        kuula.velocity+=acc*dt
+        P=mag(kuula.pos-jousi.pos)-kuula.radius
+        jousi.axis=vec(P*cos(kulma)*cos(kulma2),P*sin(kulma),P*cos(kulma)*sin(kulma2))
+        if P>P0:
+            tila=3
+    
+    # TILAN 3 KOODI KIRJOITETAAN TAHAN. TILASSA 3 KUVATAAN AMMUKSEN LENTO
+    # JA TARKKAILLAAN OSUUKO AMMUS PYLVÄISIIN JA MISSA KULMASSA
+    # JOS AMMUS OSUU PALKKIIN 1  SIIRRYTAAN TILAAN 4
+    # JOS AMMUS OSUU PALKKIIN 2 SIIRRYTAAN TILAAN 5
+    
+    
+    # TILAN 4 KOODISSA KUVATAAN PALKKI1:N KAATUMINEN JA AMMUKSEN LOPPULENTO
+    
+    # TILAN 5 KOODISSA KUVATAAN PALKKI2:N  KAATUMINEN JA AMMUKSEN LOPPULENTO

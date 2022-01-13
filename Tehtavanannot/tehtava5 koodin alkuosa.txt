@@ -1,0 +1,29 @@
+GlowScript 2.9 VPython
+scene.width=800
+scene.height=650
+scene.range=120
+scene.center=vec(0,30,0)
+scene.title='PALLO TULEE ALAS KOURUA, aloitus= click'
+
+
+ball=sphere(pos=vec(0,40,-80),radius=4,color=vec(1,0.5,0.1))
+
+lattia=box(pos=vec(0,-0.5,0),size=vec(1,66,180),color=0.5*color.white,axis=vec(0,1,0))
+taso1=box(pos=vec(-50,18,0),size=vec(1,50,180),color=0.5*color.white,axis=vec(1,1,0))
+taso2=box(pos=vec(50,18,0),size=vec(1,50,180),color=0.5*color.white,axis=vec(-1,1,0))
+
+
+ball.velocity=vec(-17,15,4)  #pallon alkunopeus on nolla
+a=vec(0,-9.81,0)
+e=0.82     #tormayksen elastisuus
+dt=0.01
+ 
+
+scene.pause()
+
+while ball.pos.z<90:
+    rate(300)
+
+# TAYDENNA SILMUKAN KOODIA SITEN ETTA SE TOTEUTTAA
+# PALLON PUTOAMISLIIKKEEN, SEKA TORMAYKSET LATTIAAN
+# SEKA KOURUN MOLEMPIIN SEINÄMIIN 

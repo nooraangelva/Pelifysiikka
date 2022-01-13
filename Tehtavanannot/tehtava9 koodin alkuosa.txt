@@ -1,0 +1,77 @@
+﻿GlowScript 2.9 VPython
+scene.width=650
+scene.height=450
+scene.range=10
+#scene.forward=vec(0.1,-0.2,-1)
+scene.center=vec(0.8,5,0)
+scene.title='Anna nopeus: '
+scene.caption='Kentan koko 18m x 9m. Pallon lähtokulma ja -nopeus, seka kierre saadettavissa'
+scene.fov=radians(70)
+cw=0.43       #aerodynaaminen muotovakio
+c=1           #kerroin     
+e=0.5
+e2=0.04
+tih=1.25      #ilman tiheys
+kulmanopeus=-0.5        #pallon kulmanopeus
+r=0.105        #pallon sade
+m=0.27        #pallon massa
+k1=c*tih*kulmanopeus*r/m    #vakio magnusvoiman lausekkeessa
+k2=0.5*cw*tih*pi*r**2   #vakio ilmanvastuksen laskemisessa
+v0=10.0                       #pallon alkunopeus
+kulma=radians(20)           #pallon kulma
+
+def saada_v(s1):
+    global v0
+    v0=s1.value
+    pallo.velocity=vec(v0*cos(kulma),v0*sin(kulma),0)
+    s1teksti.text='{:2.1f} m/s'.format(v0)
+    
+s1=slider(pos=scene.title_anchor,min=0,max=30,value=10,length=150,bind=saada_v)
+s1teksti=wtext(pos=scene.title_anchor,text='{:2.1f} m/s '.format(s1.value))
+
+scene.append_to_title(' ja lahtokulma ')
+def saadakulma(s2):
+    global kulma
+    kulma=radians(s2.value)
+    pallo.velocity=vec(v0*cos(kulma),v0*sin(kulma),0)
+    s2teksti.text='{:2.1f} deg '.format(s2.value)
+    
+s2=slider(pos=scene.title_anchor,min=0,max=35,value=20,length=150,bind=saadakulma)
+s2teksti=wtext(pos=scene.title_anchor,text='{:2.1f} deg'.format(s2.value))
+
+def saadakierre(s3):
+    global kulmanopeus
+    global vakio1
+    kulmanopeus=s3.value
+    k1=c*tih*kulmanopeus*r/m    #paivita vakio voiman lausekkeessa
+    if kulmanopeus>0:
+        s3teksti.text='{:2.1f} rad/s '.format(s3.value)
+    else:
+        s3teksti.text='{:2.1f} rad/s  '.format(s3.value)
+    
+scene.append_to_title('\nSaada kierrekulmanopeus.: ylakierre <0, alakierre>0 ')
+s3=slider(pos=scene.title_anchor,min=-2,max=2,value=-0.5,length=150,bind=saadakierre,top=10)
+s3teksti=wtext(pos=scene.title_anchor,text=' rad/s ')
+
+#luodaan kentta, maali, verkko ja pallo
+otsikko=label(pos=vec(0,12,0),text='Click to start',box=False)
+kentta=box(pos=vec(0,-0.05,0),size=vec(18,0.1,9),color=vec(0.3,0.8,0.4))
+maali1=cylinder(pos=vec(0,0,-4.5),radius=0.1,axis=vec(0,3,0))
+maali1=cylinder(pos=vec(0,0,4.5),radius=0.1,axis=vec(0,3,0))
+
+verkko=box(pos=vec(0,2,0),size=vec(0.1,2,9),color=vec(1,1,0),opacity=0.4)
+pallo=sphere(pos=vec(-10,2.5,0),radius=0.3,color=vec(0.6,0.6,0.6),make_trail=True)
+pallo.velocity=vec(v0*cos(kulma),v0*sin(kulma),0)  #pallon lahtonopeusvektori
+n=vec(0,0,1)  #pallon pyorimisakseli
+
+
+dt=0.01
+scene.pause()
+
+otsikko.text=''
+#silmukassa palloon vaikuttaa painovoima, ilmanvastus ja kierteen aiheuttava magnus voima
+while pallo.pos.x<14:
+    rate(100)
+# Koodaa tahan pallon lento
+# ja pallon pomppiminen lattiasta (elastisuuskerroin e = on annettu ylhaalla ja se on 0.5
+# Koodaa myos tilanne, jossa pallo osuu verkkoon ja tippuu siita lattialle (elastisuus e2 = 0.04)

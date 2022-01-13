@@ -1,0 +1,35 @@
+GlowScript 2.9 VPython
+# Tehtava 6 : digitaalinen ja analoginen kello
+scene.range=10
+scene.center=vec(0,2,0)
+scene.title='KELLOTAULU'
+
+# LUODAAN KELLOTAULU 
+taulu=cylinder(pos=vec(0,0,-0.2),radius=6, axis=vec(0,0,0.1),color=0.5*color.white)
+kehys=ring(pos=vec(0,0,-0.2), radius=6, thickness=0.5, color=0.3*color.red,axis=vec(0,0,1))
+napa=cylinder(pos=vec(0,0,0), radius=0.4,axis=vec(0,0,0.5),color=0.3*color.red)
+
+klo3=cylinder(pos=vec(5,0,0), radius=0.2,axis=vec(0,0,0.5),color=0.3*color.red)
+klo6=cylinder(pos=vec(0,-5,0), radius=0.2,axis=vec(0,0,0.5),color=0.3*color.red)
+klo9=cylinder(pos=vec(-5,0,0), radius=0.2,axis=vec(0,0,0.5),color=0.3*color.red)
+klo3=cylinder(pos=vec(0,5,0), radius=0.2,axis=vec(0,0,0.5),color=0.3*color.red)
+
+# LUODAAN KELLOTAULUN VIISARIT  
+tun=arrow(pos=vec(0,0,0.1), axis=vec(0,4,0),color=color.red,shaftwidth=0.4)
+minut=arrow(pos=vec(0,0,0.3), axis=vec(0,5,0),color=color.blue,shaftwidth=0.2)
+#sek= TAYDENNA TAMA LOPPUUN (LUO SEKUNTIVIISARI)
+
+# TAYDENNA VIISAREIDEN KULMANOPEUDET wtun,wmin, wsek (kaava w = 2*pi/T , T = kierrosaika)
+#wtun=    
+#wmin=      
+#wsek=    
+   
+dt=0.01
+
+while True:
+    rate(1200)    #testausvaiheessa nopeutetaan kelloa, lopuksi voidaan asettaa rate(100) 
+    # Taydenna tahan koodi, joka saa viisarit pyorimaan oikealla kulmanopeudella
+    # Paivita silmukassa myos kokonaisaika t  ja erota siita tunnit, minuutit ja sekunnit
+    # Tarvitset jakolaskua /, jakojaannosoperaatoria %  seka floor funktiota joka pyoristaa 
+    # luvun alaspain lahimpaan kokonaislukuun
+    # Paivita digikellon teksti

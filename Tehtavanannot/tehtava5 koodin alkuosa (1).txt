@@ -1,0 +1,69 @@
+GlowScript 2.9 VPython
+# TAYDENNYSTEHTAVA   LUISTELIJA
+scene.center=vec(0,3,0)                         
+scene.range=35
+scene.forward=vec(0,-0.5,-3)
+scene.title = 'Luistelija\n       '
+scene.caption = '   Saada pyorimisnopeutta\n' 
+scene.lights=[]
+
+askel=vec(0,0,0) #luistelijan liikuttelu tapahtuu lisaamalla paikkavektoriin askel- vektori
+kulmanopeus=0     #alustetaan luistelijan pyorimisnopeusmuuttuja alkuarvolla nolla
+
+def saadanopeus(s):
+    global kulmanopeus     
+    kulmanopeus=radians(s.value)
+    wt.text = '{:1.0f}'.format(s.value/6.28*60)+' RPM   '
+
+s=slider(min=-12,max=12,value=0,length=200,bind=saadanopeus,right=25,top=15)
+wt = wtext(text='{:1.0f}'.format(s.value/6.28*60)+' RPM   ')
+
+def eteen(b1):
+    global askel
+    askel=vec(0,0,0.1)
+    
+b1=button(pos=scene.title_anchor,background=color.cyan, text=' eteen',bind=eteen)
+
+# Kirjoita tahan aliohjelma, joka saa luistelijan menemaan taaksepain painiketta b2 painettaessa
+# Ao.rivillä on painikkeen muodostamiseen vaatima koodi kommenttina. Poista siitä # - merkki
+
+# b2=button(pos=scene.title_anchor,background=color.cyan, text=' taakse',bind=taakse)
+
+# Kirjoita tahan aliohjelma, joka saa luistelijan menemaan oikealle painiketta b3 painettaessa
+
+# b3=button(pos=scene.title_anchor,background=color.cyan, text=' oikealle',bind=oikealle)
+
+# Kirjoita tahan aliohjelma, joka saa luistelijan menemaan vasemmalle  painiketta b4 painettaessa
+
+# b4=button(pos=scene.title_anchor,background=color.cyan, text=' vasemmalle',bind=vasemmalle)
+
+
+# Kirjoita tahan aliohjelma, jonka nimi on stop, joka pysayttaa luistelijan
+# ts. liike ja rotaatio loppuu, sliderin kytkin palautuu keskelle ja sliderin teksti paivittyy vastaavasti
+  
+# b0=button(pos=scene.title_anchor,background=color.yellow,text='stop ',bind=stop)
+
+scene.append_to_caption('      valot: ')
+valokytkin=checkbox(bind=valot, text='ON/OFF')
+
+# luodaan luistelualustaksi jaa
+kentta=cylinder(pos=vec(0,-0.25,0),radius=40, axis=vec(0,0.5,0),color=vec(0.8,0.8,0.8))
+lamppu = local_light(pos=vec(22,18,30), color=color.white,visible=False)
+polttimo = cylinder(pos=lamppu.pos,color=vec(1,1,0.8),radius=1, axis=1.5*hat(vec(22,18,30)),emissive=True)
+
+kadet=ring(pos=vec(0,4,0),radius=2.5,thickness=1,axis=vec(0,0,1),color=vec(0.3,0.3,0.3))
+paa=sphere(pos=vec(0,8,0),radius=2,color=vec(0.8,0.8,0.8))
+vartalo=cone(pos=vec(0,0.25,0),radius=4,axis=vec(0,8,0),color=vec(0.6,0.6,0.9))
+
+luistelija=compound([vartalo,kadet,paa])
+def valot(valokytkin):
+    if valokytkin.checked:
+        lamppu.visible=True
+    else:
+        lamppu.visible=False
+    
+
+while True:
+    rate(100)
+    luistelija.pos+=askel
+    luistelija.rotate(angle=kulmanopeus, axis=vec(0,1,0))

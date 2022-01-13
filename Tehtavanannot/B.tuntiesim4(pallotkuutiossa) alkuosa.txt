@@ -1,0 +1,36 @@
+GlowScript 2.9 VPython
+scene.width=700
+scene.height=550
+scene.center=vec(0,0,0)
+scene.range=40
+scene.forward=vec(0,-0.5,-3)
+
+L = 20.0   #kuution sivun puolilas
+#luodaan teksti ikkunan ylaosaan
+mylabel=label(pos=vec(0,33,0),text='PALLOMERI:   Click to start',box=False,color=color.cyan)
+# luodaan lasikuutio, jonka lapinakyvyysarvo on 0.3
+kuutio=box(pos=vec(0,0,0),size=vec(2*L,2*L,2*L),color=vec(0.2,0.7,1),opacity=0.3)
+# sijoitetaan pallo kuution keskelle
+pallo=[]
+pallo.append(sphere(pos=vec(0,0,0),radius=3,color=color.yellow))
+pallo.append(sphere(pos=vec(8,-6,6),radius=5,color=color.blue))
+pallo.append(sphere(pos=vec(-8,11,-3),radius=4,color=color.red))
+pallo.append(sphere(pos=vec(3,5,3),radius=6,color=color.green))
+pallo.append(sphere(pos=vec(-5,-12,2),radius=3,color=color.cyan))
+
+# annetaan pallolle alkunopeus
+pallo[0].velocity=vec(12,27,-10)
+pallo[1].velocity=vec(-5,-11,14)
+pallo[2].velocity=vec(-31,32,-11)
+pallo[3].velocity=vec(22,16,-8)
+pallo[4].velocity=vec(-15,-10,16)
+m=[1.2,1.4,1.3,1.5,1.2]  #pallojen massat
+
+g=9.81
+a=vec(0,-g,0)  #painovoiman kiihtyvyys
+e=0.92   #pallon ja seinan tormayksen kimmoisuus
+e2=0.9   #pallojen keskinaisten tormaysten kimmoisuus
+dt=0.01  #aika-askelen pituus
+t=0      #kokonaisaikalaskurin nollaus 
+scene.pause()
+mylabel.text='Palloilla eri massat ja halkaisijat. Painovoima ON, \nilmanvastusta EI. Tormaykset osittain kimmoisia'

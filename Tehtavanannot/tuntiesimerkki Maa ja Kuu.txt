@@ -1,0 +1,36 @@
+GlowScript 2.9 VPython
+scene.width=800
+scene.height=600
+scene.range=6e8
+# tarvittavat vakiot
+G=6.67e-11        # gravitaatiovakio
+M=5.97e24         # maan massa 
+m=7.32e22         # kuun massa
+r0=3.85e8         # kuun radan sade (painopisteen ympari)
+v0=1022           # kuun ratanopeus
+
+#luodaan maa ja kuu
+Maa=sphere(pos=vec(-m/M*r0,0,0),radius=1.5e7,color=vec(0,0.4,0.8))
+Kuu=sphere(pos=vec(r0,0,0),radius=6.4e6,color=color.yellow,make_trail=True)
+
+naytto=label(pos=vec(0,5e8,0), text='Aloitus = click', box=False)
+
+# Maan ja kuun nopeudet alkuhetkellä
+Kuu.velocity=vec(0,v0,0)
+Maa.velocity=vec(0,-m/M*v0,0)
+
+dt=600    # paikka ja nopeus lasketaan 10 min valein
+t=0       # absoluuttinen aika
+
+scene.pause()
+while True:
+    rate(200)     # animaation kuvien vaihtumisnopeus
+    dist=Kuu.pos-Maa.pos
+    aMaa=G*m/mag2(dist)*hat(dist)
+    aKuu=-G*M/mag2(dist)*hat(dist)
+    Maa.pos+=Maa.velocity*dt+0.5*aMaa*dt**2
+    Kuu.pos+=Kuu.velocity*dt+0.5*aKuu*dt**2
+    Maa.velocity+=aMaa*dt
+    Kuu.velocity+=aKuu*dt
+    t+=dt                       # ajan paivitys 
+    naytto.text=round(t/(24*60*60)) + ' days'

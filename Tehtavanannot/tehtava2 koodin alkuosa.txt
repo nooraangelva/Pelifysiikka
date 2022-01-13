@@ -1,0 +1,35 @@
+# TEHT2 MAALIPOTKUN LENTORATA :  koodin täydennys.  
+# Luo glowscriptin editoriin uusi ohjelma nimelle maalipotku.  Kopioi tama koodi editoriin
+# KIRJOITA ANIMAATIOON WHILE SILMUKKA, JOSSA
+# LASKETAAN KIIHTYVYYSVEKTORI (PAINOVOIMA + ILMANVASTUS)
+# PAIVITETAAN PAIKKAA JA NOPEUTTA, SEKA DYNAAMISTA TEKSTINAYTTOA
+# TEKSTINAYTON TULEE NAYTTAA PALLON X KOORDINAATTI METRIN TARKKUUDELLA LENNON AIKANA
+# PALLON TULEE POMPATA MAASTA ELASTISUUKERTOIMELLA e (ARVO VAKIOIDEN MAARITTELYOSASSA)
+scene.width=1000
+scene.height=800
+scene.range = 45
+scene.center=vec(40,15,0)
+taulu=label(pos=vec(20,45,0),height=16,text='Maalipotku ilmanvastus huomioiden\nAloita klikkaamalla',
+box=False,color=color.yellow)
+#LUODAAN 80 m PITKA KENTTA, JALKAPALLO JA KESKIYMPYRA
+maa=box(pos=vec(40,-0.1,0),size=vec(85,0.2,30),color=vec(0,0.6,0))
+pallo = sphere(pos=vec(0,1,-4), radius=1,color=vec(0.9,0.5,0),make_trail=True)  #pallon x-koordinaatti alussa 0
+keskiympyra=ring(pos=vec(40,-0.1,0),radius=4.0,thickness=0.2,axis=vec(0,1,0))
+#VAKIOIDEN MAARITTELY:  m, cw,R ja ro TARVITAAN ILMANVASTUKSEN AIHEUTTAMAN HIDASTUVUUDEN LASKEMISEEN
+e=0.55		#pomppujen elastisuus
+m= 0.43  	#jalkapallon massa on 0.43 kg
+r=0.11  	#jalkapallon sade on 11 cm
+cw=0.4   	#pallomaisen kappaleen aerodynaaminen muotovakio
+g=9.81  	#putoamiskiihtyvyyden arvo
+ro=1.25 	#ilman tiheys on 1.25 kg/m3
+v0=40  	 	# pallo ammutaan nopeudella 42 m/s
+A=pi*r**2 	# pallon pinta-ala edesta katsottuna
+K=0.5*cw*ro*A     #yhdistetaan vakiot kertoimeksi K ilmanvastuksen laskemista varten
+alfa=radians(35)  #pallo ammutaan kulmaan alfa = 35 astetta, joka muutetaan radiaaneiksi
+# PALLON LAHTONOPEUS JAETAAN KOMPONENTTEIHIN:
+pallo.velocity=vec(v0*cos(alfa), v0*sin(alfa),0)
+#PALLON KIIHTYVYYS ON PAINOVOIMAN JA ILMANVASTUKSEN KIIHTYVYYKSIEN SUMMA
+pallo.acc=vec(0,-g,0)-K*mag2(pallo.velocity)*hat(pallo.velocity)/m
+dt=0.01  	#iteraatioaskelen pituus (aikavali)
+scene.pause()  	#odotetaan hiiren klikkausta
+# TAYDENNA TAHAN ANIMAATION TOTEUTTAVA SILMUKKA

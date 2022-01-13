@@ -1,0 +1,62 @@
+GlowScript 2.9 VPython
+#SISAPLANEETTOJEN KIERTOLIIKE AURINGON YMPARI
+#SOVELLUKSESSA EI LASKETA PLANEETTOJEN VAIKUTUSTA
+#AURINKOON, JOTEN PLANEETTOJEN MASSOJA EI TARVITA
+#Lahtotiedot ratojen laskemiselle, lahteena Wikipedia
+#Sun, massa M= 2.0e+30 kg
+#Mercury,R=57900Mm, v=47362 m/s
+#Venus, R=108208 Mm, v=35020 m/s
+#Earth,R=1496000Mm, v=29780 m/s
+#Mars, M=6,R=227920Mm, v=24100 m/s
+
+
+scene.width=700
+scene.height=550
+scene.range=2.5e+11  #nayttamon koolla on aurinkokunnan mittasuhteet
+scene.forward=vec(0,1,-0.7)
+
+mytext=text(text='Inner planets of our Solar system',
+    align='center', pos=vec(0,6e+11,-3e+8), color=color.cyan)
+M = 2.0e+30        # Sun mass kg
+G = 6.67e-11       # Gravitaatiovakio
+
+
+#SIJOITETAAN PLANEETAT OIKEILLA ETAISYYKSILLE, eri puolille aurinkoa
+sun = sphere(pos=vec(0,0,0),radius=11e+9,color=color.yellow)
+earth = sphere(pos=vec(149.6e+9,0,0),radius=5.1e+9,color=color.cyan,make_trail=True)
+merc = sphere(pos=vec(57.9e+9*cos(1),57.9e+9*sin(1),0),radius=3.1e+9,color=vec(1,0.8,0),make_trail=True)
+venus = sphere(pos=vec(108.2e+9*cos(3),108.2e+9*sin(3),0),radius=7e+9,color=vec(0.8,0.4,0),make_trail=True)
+mars = sphere(pos=vec(227.9e+9*cos(5),227.9e+9*sin(5),0),radius=4.1e+9,color=color.red,make_trail=True)
+
+#ANNETAAN PLANEETOILLE TODELLISET NOPEUDET
+earth.velocity = vec(0,29780,0)  #Maan ratanopeus Wikipedian mukaan
+merc.velocity = vec(-47362*sin(1),47362*cos(1),0) #Merkuriuksen ratanopeus
+venus.velocity = vec(-35020*sin(3),35020*cos(3),0) #Venuksen ratanopeus
+mars.velocity = vec(-24100*sin(5),24100*cos(5),0)  #Marsin ratanopeus
+
+#PLANEETTOJEN MUKAAN TULEVAT NIMIKYLTIT (12 pixelia planeetan alapuolelle)
+label1=label(pos=merc.pos,text='Mercury',yoffset=12,box=False)
+label2=label(pos=venus.pos,text='Venus',yoffset=12,box=False)
+label3=label(pos=earth.pos,text='Earth',yoffset=12,box=False)
+label4=label(pos=mars.pos,text='Mars',yoffset=12,box=False)
+dt = 3600           # PAIVITYSVALI ON 3600 s = 1 h
+
+tlabel=label(pos=vec(0,0.9e+12,0),box=False,text='Click to start')
+t = 0               # nollataan aikalaskuri
+days=0              # nollataan paivalaskuri
+years = 0
+
+scene.pause()
+
+while True:     
+    rate(300)
+# laske vektorit auringosta kuhunkiin planeettaan  dMerc, dVenus, dMaa, dMars
+# laske kiihtyvyyden kaikille planeetoille aMerc, ....
+# paivita paikat
+# paivita nopeudet
+# paivita aika
+# paivita kylttien paikat
+# paivita naytto, muoto on  __ vuotta  __  vrk
+# vuodet lasketaan seuraavasti:  years=floor(t/(365*24*60*60))
+# floor pyoristaa desimaaliluvun alaspain lahimpaan kok.lukuun
+

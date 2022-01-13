@@ -1,0 +1,23 @@
+GlowScript 2.9 VPython
+# Teht1. Kopioi tama koodi GlowScript VPythonin editoriin ja taydenna se toimivaksi
+
+scene.range=12                  #mittakaava
+scene.center=vec(0,6,0)
+scene.title='Aloita klikkaamalla ikkunaa'
+
+#luodaan grafiikkaobjektit pallo, lattia ja seina
+pallo = sphere(pos=vec(-10,11,0), radius=0.75,color=color.orange)  
+seina = box(pos=vec(13,6,0), size=vec(0.2,12,12), texture=textures.rough) 
+lattia=box(pos=vec(0,-0.1,0),size=vec(26,0.2,12),colot=color.white)
+
+#alustetaan nopeus- ja kiihtyvyysvektorit
+pallo.velocity = vec(8,6,0)   #alkunopeus
+pallo.acc=vec(0,-9.81,0)      #painovoiman kiihtyvyys
+
+#tarvittavia vakioita
+e=0.8           #kimmoisuuskerroin tormayksissa
+dt = 0.01       #aikaaskelen pituus
+ 
+scene.pause()   #ohjelma odottaa hiiren klikkausta
+
+while  #Taydenna while osa 

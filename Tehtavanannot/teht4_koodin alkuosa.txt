@@ -1,0 +1,91 @@
+# TEHTAVA 4 (biljardi)
+# Lataa koodi glowscript editoriin
+# Taydenna koodiin pallojen tormaykset (ks. tarvittavat rivit teoriamonisteesta)
+# Lisaa myos IF rakenne, joka saa pallon katoamaan, jos pallon ja aukon paikkavetorien vali <4.4
+
+
+scene.width=700
+scene.height=500
+scene.center=vec(0,0,0)
+scene.range=40
+scene.forward=vec(0,0,-1)
+
+
+#luodaan ohjeteksti ikkunan keskelle
+mylabel=label(pos=vec(0,26,0),text='Drag initial velocity vector and press space',box=False)
+# luodaan poyta, reunus ja musta reika poydan reunaan
+poyta=box(pos=vec(0,0,-3.5),size=vec(62,44,1),color=vec(0,0.4,0))
+tausta=box(pos=vec(0,0,-4.5),size=vec(66,48,1),color=vec(0.3,0.3,0.3))
+aukko=cylinder(pos=vec(26.5,17.5,-4),radius=4,axis=vec(0,0,1),color=color.black)
+# luodaan taulukkomuuttuja, johon lisataan 5 palloa yksitellen
+pallo=[]
+pallo.append(sphere(pos=vec(-23,-18,0),radius=3,color=color.white))
+pallo.append(sphere(pos=vec(8,-4,0),radius=3,color=color.blue))
+pallo.append(sphere(pos=vec(-9,6,0),radius=3,color=color.red))
+pallo.append(sphere(pos=vec(3,12,0),radius=3,color=color.green))
+pallo.append(sphere(pos=vec(-5,-9,0),radius=3,color=color.cyan))
+
+# maaritetaan nuoli valk. pallon nopeuden maaritysta varten 
+pointer=arrow(pos=pallo[0].pos, axis=vec(10,0,0), shaftwidth=1)
+
+drag_pos=None
+def grab(evt):
+    global drag_pos
+    if mag((pointer.pos+pointer.axis)-evt.pos)<6:
+        drag_pos=evt.pos
+        scene.bind('mousemove',move)
+        scene.bind('mouseup',drop)
+
+def move(evt):
+    global drag_pos
+    new_pos=evt.pos
+    if new_pos!=drag_pos:
+        displace=new_pos-drag_pos
+        drag_pos=new_pos
+        pointer.axis=pointer.axis+displace
+
+def drop(evt):
+    scene.unbind('mousemove',move)
+    scene.unbind('mouseup', drop)
+
+# annetaan palloille alkunopeus nolla
+pallo[0].velocity=vec(0,0,0)
+pallo[1].velocity=vec(0,0,0)
+pallo[2].velocity=vec(0,0,0)
+pallo[3].velocity=vec(0,0,0)
+pallo[4].velocity=vec(0,0,0)
+
+m=[1.2,1,1,1,1]  #lista joka sisaltaa pallojen massat
+
+
+e=0.9  #pallon ja reunan tormayksen elastisuuskerroin
+e2=0.92 #kahden pallon tormayksen elastisuuskerroin
+dt=0.01
+
+scene.bind('mousedown',grab)        #kutsutaan hiirella tarttumisfunktiota
+scene.waitfor('keydown')            #odotetaan space (tai muun) nappaimen painallusta
+pallo[0].velocity=5*pointer.axis    #nuolen akselista saadaan alkunopeusvektori
+mylabel.text=''                     #poistetaan teksti nakyvista
+pointer.visible=False               #poistetaan nuoli nakyvista
+
+while True:
+    rate(100)
+    for i in range(5):
+        pallo[i].acc=-1.4*norm(pallo[i].velocity) #kitkasta aiheutuvat kiihtyvyysvektorit
+        pallo[i].pos+=pallo[i].velocity*dt+0.5*pallo[i].acc*dt**2   
+        pallo[i].velocity+=pallo[i].acc*dt
+        if pallo[i].pos.x>27 and pallo[i].velocity.x>0:  #tormaykset seiniin
+            pallo[i].velocity.x=-e*pallo[i].velocity.x
+        if pallo[i].pos.x<-27 and pallo[i].velocity.x<0:
+            pallo[i].velocity.x=-e*pallo[i].velocity.x
+        if pallo[i].pos.y>18 and pallo[i].velocity.y>0:
+            pallo[i].velocity.y=-e*pallo[i].velocity.y
+        if pallo[i].pos.y<-18 and pallo[i].velocity.y<0:
+            pallo[i].velocity.y=-e*pallo[i].velocity.y
+
+	# tahan tulee pallon katoaminen aukkoon, seka
+	# pallojen tormaykset toteuttava koodi
+        
+    
+scene.unbind('mousedown',grab)       
+
